@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adams Web Design | Professional Web Services</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.5;
+            color: #333;
+            font-size: 16px;
+        }
+
+        /* Mobile Navigation */
+        nav {
+            background: #2c3e50;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .nav-menu.active {
+            max-height: 500px;
+            padding-top: 1rem;
+        }
+
+        .nav-menu li {
+            margin: 0.5rem 0;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            display: block;
+            padding: 0.75rem;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .nav-menu a:active {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 3rem 1.5rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .hero p {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.875rem 1.75rem;
+            background: #74a8d4;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            margin: 0.5rem;
+            width: calc(100% - 1rem);
+            max-width: 300px;
+            text-align: center;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid white;
+        }
+
+        .btn-outline:active {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 3rem 1.5rem;
+        }
+
+        .section h2 {
+            text-align: center;
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+        }
+
+        .section-intro {
+            text-align: center;
+            color: #666;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        /* Service Cards */
+        .service-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .service-card h3 {
+            color: #2c3e50;
+            margin-bottom: 0.75rem;
+            font-size: 1.25rem;
+        }
+
+        .service-card p {
+            color: #666;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .tag-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: #e8f4f8;
+            color: #74a8d4;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        /* Why Section */
+        .why-item {
+            text-align: center;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .why-item h3 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .why-item p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Portfolio Cards */
+        .portfolio-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .portfolio-logo {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .logo-purple {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        }
+
+        .logo-nans {
+            background: linear-gradient(135deg, #f9edd5 0%, #fef5e4 100%);
+        }
+
+        .logo-blue {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .portfolio-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Pricing Cards */
+        .pricing-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 2rem 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .pricing-card.featured {
+            border-color: #74a8d4;
+            background: linear-gradient(135deg, #f8fbff 0%, #ffffff 100%);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #74a8d4;
+            color: white;
+            padding: 0.4rem 1.25rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .price {
+            font-size: 2rem;
+            color: #74a8d4;
+            font-weight: 700;
+            text-align: center;
+            margin: 0.75rem 0;
+        }
+
+        .price-small {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .features {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+
+        .features li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 0.95rem;
+        }
+
+        .features li:last-child {
+            border-bottom: none;
+        }
+
+        /* Resource Cards */
+        .resource-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 2px solid #f0f0f0;
+            margin-bottom: 1.5rem;
+        }
+
+        .resource-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .resource-card h3 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .resource-card p {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Form Styles */
+        .form-container {
+            background: #f8f9fa;
+            padding: 2rem 1.5rem;
+            border-radius: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.875rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .success-message {
+            display: none;
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 2rem 1.5rem;
+        }
+
+        footer p {
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        /* Desktop Link */
+        .desktop-link {
+            text-align: center;
+            padding: 1rem;
+            background: #f0f0f0;
+        }
+
+        .desktop-link a {
+            color: #74a8d4;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* Background variants */
+        .bg-light {
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-header">
+            <div class="nav-brand">Adams Web Design</div>
+            <button class="menu-toggle" id="menuToggle">☰</button>
+        </div>
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#portfolio">Portfolio</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#resources">Resources</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section id="home" class="hero">
+        <h1>Websites, Hosting, and Maintenance — Handled</h1>
+        <p>Professional web design and fully managed hosting for Canadian small businesses. You focus on your business — we handle the tech.</p>
+        <a href="#contact" class="btn">Get Started</a>
+        <a href="#portfolio" class="btn btn-outline">View Portfolio</a>
+    </section>
+
+    <section id="services" class="section bg-light">
+        <h2>Our Services</h2>
+        
+        <div class="service-card">
+            <h3>Website Design & Redesign</h3>
+            <p>Custom, responsive websites built with modern technologies and best practices.</p>
+            <div class="tag-group">
+                <span class="tag">Responsive</span>
+                <span class="tag">Modern</span>
+                <span class="tag">Custom</span>
+            </div>
+        </div>
+
+        <div class="service-card">
+            <h3>Managed Hosting & Backups</h3>
+            <p>Reliable hosting with automated backups and 99.9% uptime guarantee.</p>
+            <div class="tag-group">
+                <span class="tag">99.9% Uptime</span>
+                <span class="tag">Daily Backups</span>
+            </div>
+        </div>
+
+        <div class="service-card">
+            <h3>Domain & Email Management</h3>
+            <p>Professional email addresses and complete domain management services.</p>
+            <div class="tag-group">
+                <span class="tag">Professional</span>
+                <span class="tag">Secure</span>
+            </div>
+        </div>
+
+        <div class="service-card">
+            <h3>Ongoing Maintenance & Support</h3>
+            <p>Regular updates, security monitoring, and dedicated technical support.</p>
+            <div class="tag-group">
+                <span class="tag">24/7 Monitoring</span>
+                <span class="tag">Fast Support</span>
+            </div>
+        </div>
+
+        <h2 style="margin-top: 2rem;">Why Adams Web Design</h2>
+        
+        <div class="why-item">
+            <h3>One Reliable Point of Contact</h3>
+            <p>Direct communication with your developer</p>
+        </div>
+
+        <div class="why-item">
+            <h3>Secure, Fast, Modern Websites</h3>
+            <p>Built with the latest technologies</p>
+        </div>
+
+        <div class="why-item">
+            <h3>Transparent Monthly Pricing</h3>
+            <p>No hidden fees or surprises</p>
+        </div>
+
+        <div class="why-item">
+            <h3>No Downtime or Update Stress</h3>
+            <p>We handle all maintenance</p>
+        </div>
+    </section>
+
+    <section id="portfolio" class="section">
+        <h2>Our Portfolio</h2>
+        <p class="section-intro">Here are some examples of websites we've created for clients across various industries.</p>
+        
+        <div class="portfolio-card">
+            <a href="https://dannypetersonphotography.ca/index.php" target="_blank" rel="noopener noreferrer" style="text-decoration: none; display: block;">
+                <div class="portfolio-logo logo-purple">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1500 500'%3E%3Ctext x='50%25' y='42%25' dominant-baseline='middle' text-anchor='middle' font-family='Brush Script MT, cursive' font-size='240' fill='white' font-style='italic'%3EDanny Peterson%3C/text%3E%3Cline x1='5%25' y1='57%25' x2='95%25' y2='57%25' stroke='white' stroke-width='2' /%3E%3Ctext x='50%25' y='75%25' dominant-baseline='middle' text-anchor='middle' font-family='serif' font-size='85' fill='white' letter-spacing='12'%3EPHOTOGRAPHY%3C/text%3E%3C/svg%3E" alt="Danny Peterson Photography" style="width: 100%; height: auto;">
+                </div>
+            </a>
+        </div>
+
+        <div class="portfolio-card">
+            <div class="portfolio-logo logo-nans">
+                <img src="515872919_1225941255942451_6030099983342463618_n.jpg" alt="Nan's Freezer">
+            </div>
+        </div>
+
+        <div class="portfolio-card">
+            <div class="portfolio-logo logo-blue">LOGO</div>
+        </div>
+    </section>
+
+    <section id="pricing" class="section bg-light">
+        <h2>Transparent Pricing</h2>
+        
+        <div class="pricing-card">
+            <h3>Starter</h3>
+            <div class="price">$499</div>
+            <div class="price-small">Setup Fee</div>
+            <div class="price">$49<span style="font-size: 1rem;">/mo</span></div>
+            <ul class="features">
+                <li>✓ 5-Page Website</li>
+                <li>✓ Domain & Hosting (1 year)</li>
+                <li>✓ 5 Email Accounts</li>
+                <li>✓ SSL Certificate</li>
+                <li>✓ Monthly Updates (1 hr)</li>
+                <li>✓ Mobile Responsive</li>
+            </ul>
+            <a href="#contact" class="btn">Get Started</a>
+        </div>
+
+        <div class="pricing-card featured">
+            <div class="popular-badge">MOST POPULAR</div>
+            <h3>Professional</h3>
+            <div class="price">$999</div>
+            <div class="price-small">Setup Fee</div>
+            <div class="price">$99<span style="font-size: 1rem;">/mo</span></div>
+            <ul class="features">
+                <li>✓ 10-Page Website</li>
+                <li>✓ Domain & Hosting (1 year)</li>
+                <li>✓ 10 Email Accounts</li>
+                <li>✓ SSL Certificate</li>
+                <li>✓ Monthly Updates (2 hrs)</li>
+                <li>✓ Basic SEO Setup</li>
+                <li>✓ Contact Forms</li>
+                <li>✓ Analytics Integration</li>
+            </ul>
+            <a href="#contact" class="btn">Get Started</a>
+        </div>
+
+        <div class="pricing-card">
+            <h3>Enterprise</h3>
+            <div class="price">$2,499</div>
+            <div class="price-small">Setup Fee</div>
+            <div class="price">$199<span style="font-size: 1rem;">/mo</span></div>
+            <ul class="features">
+                <li>✓ Unlimited Pages</li>
+                <li>✓ Domain & Hosting (1 year)</li>
+                <li>✓ 25 Email Accounts</li>
+                <li>✓ SSL Certificate</li>
+                <li>✓ Weekly Updates (4 hrs/mo)</li>
+                <li>✓ Advanced SEO</li>
+                <li>✓ E-commerce Ready</li>
+                <li>✓ Priority Support</li>
+                <li>✓ Custom Functionality</li>
+            </ul>
+            <a href="#contact" class="btn">Contact Us</a>
+        </div>
+    </section>
+
+    <section id="resources" class="section">
+        <h2>Client Resources</h2>
+        <p class="section-intro">Access our professional documents and forms. Click any document to view or download.</p>
+        
+        <div class="resource-card">
+            <div class="resource-icon">📋</div>
+            <h3>Client Intake Form</h3>
+            <p>Start your project with our comprehensive questionnaire</p>
+            <a href="client-intake-form.html" target="_blank" class="btn">Open Form</a>
+        </div>
+
+        <div class="resource-card">
+            <div class="resource-icon">📄</div>
+            <h3>Services Agreement</h3>
+            <p>Master services agreement template</p>
+            <a href="master-services-agreement.html" target="_blank" class="btn">View Document</a>
+        </div>
+
+        <div class="resource-card">
+            <div class="resource-icon">💼</div>
+            <h3>Development Contract</h3>
+            <p>Website project contract template</p>
+            <a href="website-dev-contract.html" target="_blank" class="btn">View Document</a>
+        </div>
+
+        <div class="resource-card">
+            <div class="resource-icon">🔧</div>
+            <h3>Maintenance Agreement</h3>
+            <p>Monthly maintenance service terms</p>
+            <a href="maintenance-agreement.html" target="_blank" class="btn">View Document</a>
+        </div>
+
+        <div class="resource-card">
+            <div class="resource-icon">🔒</div>
+            <h3>Privacy & Terms</h3>
+            <p>Privacy policy and terms of service</p>
+            <a href="privacy-terms-document.html" target="_blank" class="btn">View Document</a>
+        </div>
+    </section>
+
+    <section id="contact" class="section bg-light">
+        <h2>Let's Get Started</h2>
+        <p class="section-intro">Ready to build or improve your website? Fill out the form below and we'll get back to you within 24 hours.</p>
+        
+        <div class="form-container">
+            <div id="successMessage" class="success-message">
+                Thank you! Your message has been received. We'll be in touch soon.
+            </div>
+            
+            <form id="contactForm">
+                <div class="form-group">
+                    <label for="firstName">First Name *</label>
+                    <input type="text" id="firstName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="lastName">Last Name *</label>
+                    <input type="text" id="lastName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone">
+                </div>
+
+                <div class="form-group">
+                    <label for="company">Company/Business Name</label>
+                    <input type="text" id="company">
+                </div>
+
+                <div class="form-group">
+                    <label for="serviceType">Service Interested In *</label>
+                    <select id="serviceType" required>
+                        <option value="">-- Select a Service --</option>
+                        <option value="new-website">New Website</option>
+                        <option value="redesign">Website Redesign</option>
+                        <option value="maintenance">Maintenance Only</option>
+                        <option value="hosting">Hosting & Email</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="budget">Estimated Budget</label>
+                    <select id="budget">
+                        <option value="">-- Select a Range --</option>
+                        <option value="under-1k">Under $1,000</option>
+                        <option value="1k-3k">$1,000 - $3,000</option>
+                        <option value="3k-5k">$3,000 - $5,000</option>
+                        <option value="5k-plus">$5,000+</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="timeline">Desired Timeline</label>
+                    <select id="timeline">
+                        <option value="">-- Select Timeline --</option>
+                        <option value="asap">As soon as possible</option>
+                        <option value="1-month">Within 1 month</option>
+                        <option value="3-months">Within 3 months</option>
+                        <option value="flexible">Flexible</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Project Details *</label>
+                    <textarea id="message" required placeholder="Tell us about your project, goals, and any specific requirements..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="currentWebsite">Current Website (if applicable)</label>
+                    <input type="url" id="currentWebsite" placeholder="https://example.com">
+                </div>
+
+                <button type="submit" class="btn" style="width: 100%;">Submit Request</button>
+            </form>
+        </div>
+    </section>
+
+    <div class="desktop-link">
+        <a href="#" onclick="viewDesktopVersion(); return false;">View Desktop Version</a>
+    </div>
+
+    <footer>
+        <p><strong>Adams Web Design</strong></p>
+        <p>Email: info@adamswbdesign.ca</p>
+        <p style="margin-top: 1rem;">&copy; 2024 Adams Web Design. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            const menu = document.getElementById('navMenu');
+            menu.classList.toggle('active');
+        });
+
+        // Close menu when clicking a link
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.getElementById('navMenu').classList.remove('active');
+            });
+        });
+
+        // Form submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                company: document.getElementById('company').value,
+                serviceType: document.getElementById('serviceType').value,
+                budget: document.getElementById('budget').value,
+                timeline: document.getElementById('timeline').value,
+                message: document.getElementById('message').value,
+                currentWebsite: document.getElementById('currentWebsite').value,
+                submittedAt: new Date().toISOString()
+            };
+            
+            console.log('Form submitted:', formData);
+            
+            document.getElementById('successMessage').style.display = 'block';
+            this.reset();
+            document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
+            
+            setTimeout(() => {
+                document.getElementById('successMessage').style.display = 'none';
+            }, 5000);
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Desktop version switch
+        function viewDesktopVersion() {
+            sessionStorage.setItem('viewDesktop', 'true');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
