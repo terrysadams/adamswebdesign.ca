@@ -6,28 +6,22 @@
     <title>Adams Web Design | Professional Web Services</title>
     <link rel="icon" type="image/svg+xml" href="images/adams-favicon-compass-only.svg">
     <link href="style.css" rel="stylesheet">
+    <script src="script.js"></script>
 </head>
 <body>
     <nav>
-        <div class="nav-container">
-            <a href="https://adamswebdesign.ca">
-                <img src="images/adams-navbar-logo-pyramid.svg" alt="Adams Web Design" class="nav-logo">
-            </a>
-            <div class="hamburger" id="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            <ul id="navMenu">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="#portfolio">Portfolio</a></li>
-                <li><a href="#about-us">About Us</a></li>
-                <li><a href="#pricing">Pricing</a></li>
-                <li><a href="#resources">Resources</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </div>
+        <a href="https://adamswebdesign.ca">
+            <img src="images/adams-navbar-logo-pyramid.svg" alt="Adams Web Design" class="nav-logo">
+        </a>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#portfolio">Portfolio</a></li>
+            <li><a href="#about-us">About Us</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#resources">Resources</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
     </nav>
 
     <section id="home" class="hero">
@@ -39,7 +33,7 @@
 
     <section id="services" class="section" style="background: #f8f9fa;">
         <h2>Our Services</h2>
-        <div class="services-grid">
+        <div class="services-grid" style="grid-template-columns: repeat(2, 1fr); max-width: 1000px; margin: 0 auto;">
             <div class="service-card">
                 <h3>Website Design & Redesign</h3>
                 <p>Custom, responsive websites built with modern technologies and best practices.</p>
@@ -100,7 +94,7 @@
         <h2>Our Portfolio</h2>
         <p style="text-align: center; color: #666; margin-bottom: 2rem;">Here are some examples of websites and web applications we've created for clients across various industries.</p>
         
-        <div class="portfolio-grid">
+        <div class="portfolio-grid" style="grid-template-columns: repeat(2, 1fr); max-width: 1000px; margin: 0 auto;">
             <div class="portfolio-card">
                 <a href="https://dannypetersonphotography.ca/index.php" target="_blank" rel="noopener noreferrer" style="text-decoration: none; display: block;">
                     <div class="portfolio-logo logo-purple" style="background: white; padding: 2rem; display: flex; align-items: center; justify-content: center;">
@@ -156,7 +150,7 @@
             </div>
 
             <div class="pricing-card featured">
-                <div class="popular-badge">Most Popular</div>
+                <div class="popular-badge">MOST POPULAR</div>
                 <h3>Professional</h3>
                 <div class="price">$999</div>
                 <div class="price-small">Setup Fee</div>
@@ -166,69 +160,78 @@
                     <li>✓ Domain & Hosting (1 year)</li>
                     <li>✓ 10 Email Accounts</li>
                     <li>✓ SSL Certificate</li>
-                    <li>✓ Advanced SEO</li>
                     <li>✓ Monthly Updates (2 hrs)</li>
-                    <li>✓ Priority Support</li>
-                    <li>✓ Analytics Dashboard</li>
+                    <li>✓ Basic SEO Setup</li>
+                    <li>✓ Contact Forms</li>
+                    <li>✓ Analytics Integration</li>
                 </ul>
                 <a href="#contact" class="btn">Get Started</a>
             </div>
 
             <div class="pricing-card">
                 <h3>Enterprise</h3>
-                <div class="price">Custom</div>
+                <div class="price">$2,499</div>
                 <div class="price-small">Setup Fee</div>
-                <div class="price" style="font-size: 2rem;">$199+<span style="font-size: 1rem;">/mo</span></div>
+                <div class="price" style="font-size: 2rem;">$199<span style="font-size: 1rem;">/mo</span></div>
                 <ul class="features">
                     <li>✓ Unlimited Pages</li>
                     <li>✓ Domain & Hosting (1 year)</li>
-                    <li>✓ Unlimited Email Accounts</li>
+                    <li>✓ 25 Email Accounts</li>
                     <li>✓ SSL Certificate</li>
-                    <li>✓ E-commerce Integration</li>
-                    <li>✓ Custom Features</li>
-                    <li>✓ Monthly Updates (4+ hrs)</li>
-                    <li>✓ Dedicated Support</li>
-                    <li>✓ Advanced Analytics</li>
+                    <li>✓ Weekly Updates (4 hrs/mo)</li>
+                    <li>✓ Advanced SEO</li>
+                    <li>✓ E-commerce Ready</li>
+                    <li>✓ Priority Support</li>
+                    <li>✓ Custom Functionality</li>
                 </ul>
-                <a href="#contact" class="btn">Get Started</a>
+                <a href="#contact" class="btn">Contact Us</a>
             </div>
         </div>
     </section>
 
-    <section id="about-us" class="section">
-        <h2>About Us</h2>
-        <div style="max-width: 800px; margin: 0 auto; text-align: center;">
-            <p style="margin-bottom: 1.5rem;">Adams Web Design is a boutique web design and hosting company based in Canada, specializing in helping small businesses establish and maintain their online presence.</p>
-            <p style="margin-bottom: 1.5rem;">With years of experience in web development and a commitment to personalized service, we take the complexity out of website management so you can focus on what you do best — running your business.</p>
-            <p>We believe every business deserves a professional website without the headaches of technical management. That's why we handle everything from design to hosting to ongoing maintenance.</p>
-        </div>
-    </section>
-
-    <section id="resources" class="section" style="background: #f8f9fa;">
-        <h2>Helpful Resources</h2>
+    <section id="resources" class="section">
+        <h2>Client Resources</h2>
+        <p style="text-align: center; color: #666; margin-bottom: 1rem;">Access our professional documents and forms. Click any document to view or download.</p>
+        
         <div class="resources-grid">
             <div class="resource-card">
-                <div class="resource-icon">📚</div>
-                <h3>Blog & Guides</h3>
-                <p>Tips and tutorials for website owners</p>
-                <a href="#" class="btn" style="display: inline-block; width: auto; padding: 0.5rem 1.5rem; font-size: 0.9rem;">Coming Soon</a>
+                <div class="resource-icon">📋</div>
+                <h3>Client Intake Form</h3>
+                <p>Start your project with our comprehensive questionnaire</p>
+                <a href="forms/client-intake-form.html" target="_blank" class="btn" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">Open Form</a>
             </div>
+
             <div class="resource-card">
-                <div class="resource-icon">💬</div>
-                <h3>Support Center</h3>
-                <p>Get help with your website</p>
-                <a href="#contact" class="btn" style="display: inline-block; width: auto; padding: 0.5rem 1.5rem; font-size: 0.9rem;">Contact Us</a>
+                <div class="resource-icon">📄</div>
+                <h3>Services Agreement</h3>
+                <p>Master services agreement template</p>
+                <a href="forms/master-services-agreement.html" target="_blank" class="btn" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">View Document</a>
             </div>
+
             <div class="resource-card">
-                <div class="resource-icon">🎓</div>
-                <h3>Video Tutorials</h3>
-                <p>Learn how to manage your site</p>
-                <a href="#" class="btn" style="display: inline-block; width: auto; padding: 0.5rem 1.5rem; font-size: 0.9rem;">Coming Soon</a>
+                <div class="resource-icon">💼</div>
+                <h3>Development Contract</h3>
+                <p>Website project contract template</p>
+                <a href="forms/website-dev-contract.html" target="_blank" class="btn" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">View Document</a>
+            </div>
+
+            <div class="resource-card">
+                <div class="resource-icon">🔧</div>
+                <h3>Maintenance Agreement</h3>
+                <p>Monthly maintenance service terms</p>
+                <a href="forms/maintenance-agreement.html" target="_blank" class="btn" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">View Document</a>
+            </div>
+
+            <div class="resource-card">
+                <div class="resource-icon">🔒</div>
+                <h3>Privacy & Terms</h3>
+                <p>Privacy policy and terms of service</p>
+                <a href="forms/privacy-terms-document.html" target="_blank" class="btn" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">View Document</a>
             </div>
         </div>
     </section>
 
-    <section id="contact" class="section">
+    <section id="contact" class="section" style="background: #f8f9fa;">
         <h2>Let's Get Started</h2>
         <p style="text-align: center; margin-bottom: 2rem;">Ready to build or improve your website? Fill out the form below and we'll get back to you within 24 hours.</p>
         
@@ -331,6 +334,47 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            const formData = new FormData(form);
+            
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('successMessage').style.display = 'block';
+                    form.reset();
+                    document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
+                    
+                    setTimeout(() => {
+                        document.getElementById('successMessage').style.display = 'none';
+                    }, 5000);
+                } else {
+                    throw new Error('Form submission failed');
+                }
+            })
+            .catch(error => {
+                alert('There was an error submitting the form. Please try again or email us directly at info@adamswebdesign.ca');
+            });
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
