@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nan's Freezer - Where Every Day is a Treat</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+            background: #FFF9F0;
+        }
+
+        /* Animated background elements */
+        .ice-cream-float {
+            position: fixed;
+            font-size: 40px;
+            pointer-events: none;
+            z-index: 1;
+            animation: float 20s infinite;
+            opacity: 0.3;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-100vh) rotate(360deg); }
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #FF6B9D 0%, #C06C84 25%, #6C5B7B 50%, #355C7D 75%, #2A9D8F 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            padding: 100px 20px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .logo {
+            max-width: 280px;
+            height: auto;
+            margin-bottom: 30px;
+            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.3));
+            animation: bounce 2s infinite;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .logo:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hero h1 {
+            font-size: 4em;
+            margin-bottom: 20px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+            animation: colorChange 5s infinite;
+        }
+
+        @keyframes colorChange {
+            0%, 100% { color: #FFE66D; }
+            25% { color: #FF6B9D; }
+            50% { color: #4ECDC4; }
+            75% { color: #95E1D3; }
+        }
+
+        .hero p {
+            font-size: 1.8em;
+            max-width: 800px;
+            margin: 0 auto;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: pulse 3s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        /* Confetti rain */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #FF6B9D;
+            position: absolute;
+            animation: fall 3s linear infinite;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(100vh) rotate(360deg); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .story-section {
+            padding: 80px 20px;
+            background: linear-gradient(to bottom, #FFF9F0, #FFE5E5);
+            position: relative;
+        }
+
+        .story-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .story-content h2 {
+            font-size: 3em;
+            color: #FF6B9D;
+            margin-bottom: 40px;
+            text-align: center;
+            animation: wiggle 3s infinite;
+            text-shadow: 2px 2px 4px rgba(255,107,157,0.3);
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-2deg); }
+            75% { transform: rotate(2deg); }
+        }
+
+        .story-content p {
+            font-size: 1.3em;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .story-content p:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(255,107,157,0.3);
+        }
+
+        .photo-showcase {
+            margin: 50px 0;
+            text-align: center;
+        }
+
+        .story-photo {
+            max-width: 100%;
+            height: auto;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-height: 500px;
+            object-fit: cover;
+            transition: all 0.5s;
+            border: 5px solid white;
+            cursor: pointer;
+        }
+
+        .story-photo:hover {
+            transform: scale(1.05) rotate(2deg);
+            box-shadow: 0 15px 40px rgba(255,107,157,0.4);
+        }
+
+        .dedication {
+            background: linear-gradient(135deg, #FF6B9D, #C06C84, #6C5B7B, #355C7D);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            padding: 80px 20px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dedication::before {
+            content: "💕";
+            position: absolute;
+            font-size: 200px;
+            opacity: 0.1;
+            top: -50px;
+            right: -50px;
+            animation: spin 20s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .dedication h2 {
+            font-size: 3em;
+            margin-bottom: 30px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+            animation: heartbeat 2s infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            10% { transform: scale(1.1); }
+            20% { transform: scale(1); }
+        }
+
+        .dedication p {
+            font-size: 1.4em;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            line-height: 1.9;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .dedication .quote {
+            font-style: italic;
+            font-size: 1.5em;
+            margin: 40px auto;
+            max-width: 700px;
+            padding: 30px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.3);
+            animation: glow 3s infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255,255,255,0.3); }
+            50% { box-shadow: 0 0 40px rgba(255,255,255,0.6); }
+        }
+
+        .hearts {
+            font-size: 3em;
+            margin: 30px 0;
+            animation: float-hearts 3s infinite;
+        }
+
+        @keyframes float-hearts {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .journey-section {
+            padding: 80px 20px;
+            background: linear-gradient(to bottom, #FFE5E5, #E0F7FA);
+        }
+
+        .journey-section h2 {
+            font-size: 3em;
+            color: #355C7D;
+            text-align: center;
+            margin-bottom: 60px;
+            animation: rainbow 5s infinite;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        @keyframes rainbow {
+            0% { color: #FF6B9D; }
+            25% { color: #4ECDC4; }
+            50% { color: #FFE66D; }
+            75% { color: #95E1D3; }
+            100% { color: #FF6B9D; }
+        }
+
+        .journey-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .journey-card {
+            background: white;
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.4s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .journey-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+            transition: left 0.5s;
+        }
+
+        .journey-card:hover::before {
+            left: 100%;
+        }
+
+        .journey-card:hover {
+            transform: translateY(-15px) rotate(2deg);
+            box-shadow: 0 15px 40px rgba(255,107,157,0.3);
+        }
+
+        .journey-card h3 {
+            font-size: 2em;
+            color: #FF6B9D;
+            margin-bottom: 20px;
+        }
+
+        .journey-card p {
+            font-size: 1.2em;
+            color: #666;
+        }
+
+        .visit-section {
+            background: linear-gradient(135deg, #2A9D8F 0%, #264653 100%);
+            padding: 100px 20px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .visit-section::before {
+            content: "🍦";
+            position: absolute;
+            font-size: 300px;
+            opacity: 0.1;
+            top: -100px;
+            left: -100px;
+            animation: spin 30s linear infinite;
+        }
+
+        .visit-section h2 {
+            font-size: 3.5em;
+            margin-bottom: 30px;
+            animation: neon 2s infinite alternate;
+            text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #FFE66D;
+        }
+
+        @keyframes neon {
+            from { text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #FFE66D; }
+            to { text-shadow: 0 0 20px #fff, 0 0 30px #FFE66D, 0 0 40px #FFE66D, 0 0 50px #FFE66D; }
+        }
+
+        .visit-section p {
+            font-size: 1.6em;
+            margin-bottom: 20px;
+        }
+
+        .location {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 40px 0;
+            padding: 25px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            display: inline-block;
+            backdrop-filter: blur(10px);
+            border: 3px solid white;
+            animation: bounce-location 2s infinite;
+        }
+
+        @keyframes bounce-location {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .closing-message {
+            background: linear-gradient(to bottom, #FFE5E5, #FFF9F0);
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .closing-message h3 {
+            font-size: 2.5em;
+            color: #FF6B9D;
+            margin-bottom: 30px;
+            animation: wiggle 3s infinite;
+        }
+
+        .closing-message p {
+            font-size: 1.4em;
+            max-width: 800px;
+            margin: 0 auto 20px;
+            color: #666;
+            padding: 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Interactive ice cream builder */
+        .ice-cream-builder {
+            margin: 50px 0;
+            padding: 40px;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .ice-cream-builder h3 {
+            font-size: 2em;
+            color: #FF6B9D;
+            margin-bottom: 20px;
+        }
+
+        .flavor-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .flavor-btn {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .flavor-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+        }
+
+        .flavor-btn.strawberry {
+            background: linear-gradient(135deg, #FF6B9D, #FF8FAB);
+            color: white;
+        }
+
+        .flavor-btn.chocolate {
+            background: linear-gradient(135deg, #8B4513, #A0522D);
+            color: white;
+        }
+
+        .flavor-btn.vanilla {
+            background: linear-gradient(135deg, #FFF8DC, #FFFACD);
+            color: #333;
+        }
+
+        .flavor-btn.mint {
+            background: linear-gradient(135deg, #98FF98, #90EE90);
+            color: #333;
+        }
+
+        .ice-cream-display {
+            margin-top: 30px;
+            font-size: 5em;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* Fun counter */
+        .fun-counter {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 50px 0;
+            flex-wrap: wrap;
+        }
+
+        .counter-box {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            min-width: 200px;
+            transition: all 0.3s;
+        }
+
+        .counter-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 30px rgba(255,107,157,0.3);
+        }
+
+        .counter-number {
+            font-size: 3em;
+            font-weight: bold;
+            color: #FF6B9D;
+            margin-bottom: 10px;
+        }
+
+        .counter-label {
+            font-size: 1.2em;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5em;
+            }
+            
+            .hero p {
+                font-size: 1.3em;
+            }
+            
+            .logo {
+                max-width: 200px;
+            }
+
+            .story-content h2,
+            .dedication h2,
+            .journey-section h2,
+            .visit-section h2 {
+                font-size: 2em;
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+    <!-- Floating ice cream emojis -->
+    <div class="ice-cream-float" style="left: 10%; animation-delay: 0s;">🍦</div>
+    <div class="ice-cream-float" style="left: 30%; animation-delay: 3s;">🍨</div>
+    <div class="ice-cream-float" style="left: 50%; animation-delay: 6s;">🍧</div>
+    <div class="ice-cream-float" style="left: 70%; animation-delay: 9s;">🍦</div>
+    <div class="ice-cream-float" style="left: 90%; animation-delay: 12s;">🍨</div>
+
+    <div class="hero">
+        <img src="515872919_1225941255942451_6030099983342463618_n.jpg" alt="Nan's Freezer Logo" class="logo" id="logo">
+        <h1>✨ Nan's Freezer ✨</h1>
+        <p>🌈 Where Every Day is a Treat Shared with Those You Love 🌈</p>
+    </div>
+
+    <div class="story-section">
+        <div class="story-content">
+            <h2>🎉 Our Amazing Story! 🎉</h2>
+            
+            <div class="photo-showcase">
+                <img src="516016869_122100825986933523_4511503327898310770_n.jpg" alt="Kids at office learning" class="story-photo" id="photo1">
+            </div>
+            
+            <p>🌟 What started as a simple idea turned into something MAGICAL! When their dad discovered an old food trailer at a great price, a brother and sister duo saw an opportunity to create something special together.</p>
+            
+            <div class="photo-showcase">
+                <img src="520033546_17864791662425107_2026099601727865674_n.jpg" alt="Painting the trailer" class="story-photo" id="photo2">
+            </div>
+            
+            <p>💪 With determination, creativity, and LOTS of hard work, these young entrepreneurs transformed that worn trailer into a vibrant ice cream shop on wheels! They learned about starting a business, mastered proper food handling, studied for inspections, and discovered what it takes to turn a dream into reality.</p>
+            
+            <div class="photo-showcase">
+                <img src="520200581_17864792091425107_1846741719602652983_n.jpg" alt="Working on trailer" class="story-photo" id="photo3">
+            </div>
+            
+            <p>💝 But this isn't just any ice cream business. Every scoop served, every smile shared, and every moment of joy created is dedicated to someone very special who inspired it all...</p>
+        </div>
+    </div>
+
+    <div class="dedication">
+        <h2>💕 In Loving Memory of Nan 💕</h2>
+        <div class="hearts">💕💗💖</div>
+        
+        <div class="photo-showcase">
+            <img src="521557513_17864791572425107_5249730423467281021_n.jpg" alt="Nan with grandchildren" class="story-photo" id="photo4" style="max-width: 600px;">
+        </div>
+        
+        <p>This business is more than just ice cream. It's a tribute to a grandmother whose spirit of kindness and belief that no day was too ordinary for a treat shared with those you love continues to inspire us.</p>
+        
+        <div class="quote">
+            "Every summer when school ended, Nan would throw us the most amazing ice cream party in her backyard. She'd set up a build-your-own ice cream bar and sit back with the biggest smile, watching us create our masterpieces. Those simple, joyful afternoons meant everything to us." 🍦✨
+        </div>
+        
+        <div class="photo-showcase">
+            <img src="519676776_17864791605425107_4321775148894932426_n.jpg" alt="Ice cream party" class="story-photo" id="photo5" style="max-width: 600px;">
+        </div>
+        
+        <p>Sadly, Nan passed away in February 2025, but her memory lives on in every scoop we serve. Nan's Freezer is our way of keeping her spirit alive and sharing that same joy she gave us with our community.</p>
+        
+        <p><strong>One scoop at a time. 💗</strong></p>
+    </div>
+
+    <div class="journey-section">
+        <h2>🚀 Our Journey! 🚀</h2>
+        <div class="journey-grid">
+            <div class="journey-card">
+                <h3>🔧 We Learned!</h3>
+                <p>From business basics to food safety certifications, we tackled every challenge together as a team!</p>
+            </div>
+            
+            <div class="journey-card">
+                <h3>🎨 We Renovated!</h3>
+                <p>With help from Dad and Pop, we transformed an old trailer into a beautiful ice cream destination!</p>
+            </div>
+            
+            <div class="journey-card">
+                <h3>🎯 We Succeeded!</h3>
+                <p>After passing our inspections and reaching our goals, we're proud to serve our community!</p>
+            </div>
+            
+            <div class="journey-card">
+                <h3>❤️ We Remember!</h3>
+                <p>Every day we operate is a celebration of Nan's legacy of spreading joy and kindness!</p>
+            </div>
+        </div>
+
+        <!-- Interactive Ice Cream Builder
+        <div class="ice-cream-builder">
+            <h3>🍦 Build Your Dream Ice Cream! 🍦</h3>
+            <p>Click a flavor to see what you'd order!</p>
+            <div class="flavor-buttons">
+                <button class="flavor-btn strawberry" onclick="showFlavor('🍓')">Strawberry</button>
+                <button class="flavor-btn chocolate" onclick="showFlavor('🍫')">Chocolate</button>
+                <button class="flavor-btn vanilla" onclick="showFlavor('🍦')">Vanilla</button>
+                <button class="flavor-btn mint" onclick="showFlavor('🌿')">Mint</button>
+            </div>
+            <div class="ice-cream-display" id="iceCreamDisplay">🍦</div>
+        </div>
+ -->
+        <!-- Fun Counter -->
+        <div class="fun-counter">
+            <div class="counter-box">
+                <div class="counter-number" id="scoopsCounter">0</div>
+                <div class="counter-label">Scoops of Love</div>
+            </div>
+            <div class="counter-box">
+                <div class="counter-number" id="smilesCounter">0</div>
+                <div class="counter-label">Smiles Created</div>
+            </div>
+            <div class="counter-box">
+                <div class="counter-number" id="dreamsCounter">1</div>
+                <div class="counter-label">Dream Achieved</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="visit-section">
+        <h2>🎊 Come Visit Us! 🎊</h2>
+        <p>We're open seasonally and can't wait to serve you!</p>
+        
+        <div class="photo-showcase">
+            <img src="518786727_17864656869425107_3614620613977355459_n.jpg" alt="Nan's Freezer trailer" class="story-photo" id="photo6" style="max-width: 700px;">
+        </div>
+        
+        <div class="location">📍 Clarenville, Newfoundland 📍</div>
+        
+        <div class="photo-showcase">
+            <img src="521192541_17865129531425107_3395585683785738140_n.jpg" alt="Kids serving ice cream" class="story-photo" id="photo7" style="max-width: 600px;">
+        </div>
+        
+        <p style="font-size: 1.4em; margin-top: 30px;">Follow us for updates on opening days, special flavors, and exciting events!</p>
+        <p style="font-size: 1.6em; margin-top: 30px;">🌟 Opening Soon for Summer 2025! 🌟</p>
+    </div>
+
+    <div class="closing-message">
+        <h3>✨ More Than Just Ice Cream ✨</h3>
+        <p>When you visit Nan's Freezer, you're not just getting a delicious treat. You're becoming part of a story about family, perseverance, and keeping cherished memories alive. You're supporting young entrepreneurs who learned that with hard work and dedication, dreams really do come true! 🌈</p>
+        <p style="margin-top: 30px; font-style: italic;">"Nan's freezer was always filled with her spirit of kindness and belief that no day was too ordinary for a treat shared with those you love. This is our way of keeping her memory alive... One scoop at a time." 💕</p>
+        <div class="hearts">🍦💕🍨💗🍧</div>
+    </div>
+
+    <script>
+        // Image loading - replace these URLs with actual uploaded image URLs
+        const images = {
+            logo: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="250" height="250"><rect fill="%234ECDC4" width="250" height="250"/><text x="50%" y="50%" font-size="20" text-anchor="middle" dy=".3em" fill="white">Nan\'s Freezer Logo</text></svg>',
+            photo1: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500"><rect fill="%23FFE5CC" width="800" height="500"/><text x="50%" y="50%" font-size="24" text-anchor="middle" dy=".3em" fill="%23666">Learning at the office</text></svg>',
+            photo2: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500"><rect fill="%234ECDC4" width="800" height="500"/><text x="50%" y="50%" font-size="24" text-anchor="middle" dy=".3em" fill="white">Painting the trailer</text></svg>',
+            photo3: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500"><rect fill="%23FFB6C1" width="800" height="500"/><text x="50%" y="50%" font-size="24" text-anchor="middle" dy=".3em" fill="white">Hard at work</text></svg>',
+            photo4: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400"><rect fill="%2387CEEB" width="600" height="400"/><text x="50%" y="50%" font-size="20" text-anchor="middle" dy=".3em" fill="white">Nan with grandchildren</text></svg>',
+            photo5: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400"><rect fill="%23FFE5CC" width="600" height="400"/><text x="50%" y="50%" font-size="20" text-anchor="middle" dy=".3em" fill="%23666">Ice cream party memories</text></svg>',
+            photo6: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="700" height="450"><rect fill="%234ECDC4" width="700" height="450"/><text x="50%" y="50%" font-size="22" text-anchor="middle" dy=".3em" fill="white">Nan\'s Freezer Trailer</text></svg>',
+            photo7: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400"><rect fill="%23FFB6C1" width="600" height="400"/><text x="50%" y="50%" font-size="20" text-anchor="middle" dy=".3em" fill="white">Serving ice cream</text></svg>'
+        };
+
+        // Set placeholder images
+        Object.keys(images).forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.src = images[id];
+        });
+
+        // Interactive ice cream builder
+        function showFlavor(emoji) {
+            const display = document.getElementById('iceCreamDisplay');
+            display.textContent = emoji + emoji + emoji;
+            display.style.animation = 'none';
+            setTimeout(() => {
+                display.style.animation = 'shake 0.5s';
+            }, 10);
+        }
+
+        // Animated counters
+        function animateCounter(id, target, duration) {
+            const element = document.getElementById(id);
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = target + '+';
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current);
+                }
+            }, 16);
+        }
+
+        // Start counters when page loads
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                animateCounter('scoopsCounter', 1000, 2000);
+                
