@@ -5,6 +5,96 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NexusCore Networks</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    // Screen Width and Orientation Detection Script
+    (function() {
+        // Configuration - adjust these values as needed
+        const MAX_MOBILE_WIDTH = 768; // pixels - redirect if width is less than this
+        
+        // Check if user has manually chosen to view desktop version
+        function hasDesktopPreference() {
+            return sessionStorage.getItem('viewDesktop') === 'true';
+        }
+        
+        // Get current screen dimensions and orientation
+        function getScreenInfo() {
+            return {
+                width: window.innerWidth || document.documentElement.clientWidth,
+                height: window.innerHeight || document.documentElement.clientHeight,
+                orientation: window.screen.orientation?.type || 
+                           (window.innerWidth > window.innerHeight ? 'landscape' : 'portrait')
+            };
+        }
+        
+        // Determine if mobile version should be shown
+        function shouldShowMobile() {
+            const screenInfo = getScreenInfo();
+            
+            // Show mobile version if width is below threshold AND in portrait mode
+            // OR if width is very narrow even in landscape
+            if (screenInfo.width < MAX_MOBILE_WIDTH) {
+                // If in portrait, always redirect
+                if (screenInfo.orientation.includes('portrait')) {
+                    return true;
+                }
+                // If in landscape but still narrow (like a small phone), redirect
+                if (screenInfo.width < 600) {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+        
+        /* Perform redirect if conditions are met
+        function checkAndRedirect() {
+            // Don't redirect if already on mobile version
+            if (window.location.pathname.includes('mobile.html')) {
+                return;
+            }
+            
+            if (shouldShowMobile() && !hasDesktopPreference()) {
+                // Redirect to mobile version
+                window.location.href = 'mobile.html';
+            }
+        }*/
+        
+        // Run check on page load
+        checkAndRedirect();
+        
+        // Re-check on orientation change or window resize
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(function() {
+                if (!hasDesktopPreference()) {
+                    checkAndRedirect();
+                }
+            }, 250);
+        });
+        
+        window.addEventListener('orientationchange', function() {
+            setTimeout(function() {
+                if (!hasDesktopPreference()) {
+                    checkAndRedirect();
+                }
+            }, 100);
+        });
+        
+        // Functions to allow users to switch versions manually
+        window.viewDesktopVersion = function() {
+            sessionStorage.setItem('viewDesktop', 'true');
+            window.location.href = 'index.html';
+        };
+        
+        window.viewMobileVersion = function() {
+            sessionStorage.removeItem('viewDesktop');
+            window.location.href = 'mobile.html';
+        };
+    })();
+  </script>
+  
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
@@ -83,7 +173,19 @@
     @media (min-width: 1024px) {
       .dashboard-grid {
         grid-template-columns: 3fr 5fr 4fr;
+        grid-template-areas: "left center right";
       }
+      
+      .column-left { grid-area: left; }
+      .column-center { grid-area: center; }
+      .column-right { grid-area: right; }
+    }
+    
+    /* Mobile/Tablet: center, left, right order */
+    @media (max-width: 1023px) {
+      .column-center { order: 1; }
+      .column-left { order: 2; }
+      .column-right { order: 3; }
     }
     
     .column { display: flex; flex-direction: column; gap: 16px; }
@@ -261,9 +363,161 @@
     }
     
     .toast.show { transform: translateY(0); opacity: 1; }
+
+    #intro-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 11, 15, 0.85);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #intro-modal {
+      background: var(--bg-card);
+      border: 1px solid var(--primary);
+      border-radius: 14px;
+      padding: 28px 32px;
+      max-width: 720px;
+      width: 90%;
+      box-shadow: 0 0 40px rgba(173, 255, 47, 0.25);
+      position: relative;
+      animation: introFade 0.4s ease;
+      pointer-events: auto;
+    }
+
+    @keyframes introFade {
+      from { opacity: 0; transform: scale(0.95); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    #intro-modal h2 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--primary);
+      letter-spacing: 0.12em;
+      margin-bottom: 4px;
+    }
+
+    #intro-modal .tagline {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .intro-section {
+      margin-bottom: 18px;
+    }
+
+    .intro-section h3 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    .intro-section p,
+    .intro-section li {
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    .intro-section ul {
+      padding-left: 18px;
+    }
+
+    .intro-section li {
+      margin-bottom: 6px;
+    }
+
+    .intro-footer {
+      margin-top: 18px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    #intro-close {
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      background: none;
+      border: none;
+      color: var(--primary);
+      font-size: 1.6rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    #intro-close:hover {
+      transform: scale(1.2);
+      color: #fff;
+    }
   </style>
 </head>
 <body>
+
+  <div id="intro-overlay" onclick="if(event.target.id==='intro-overlay') document.getElementById('intro-overlay').style.display='none'">
+    <div id="intro-modal" role="dialog" aria-modal="true">
+      <button id="intro-close" type="button" aria-label="Close" onclick="document.getElementById('intro-overlay').style.display='none'; event.stopPropagation();">&times;</button>
+
+      <h2>NexusCore Network Dashboard</h2>
+      <p class="tagline">Unified Wireless Infrastructure Management</p>
+
+      <div class="intro-section">
+        <h3>Main Purpose</h3>
+        <p>
+          This dashboard is a centralized web-based tool designed for NexusCore Networks,
+          enabling administrators to monitor and manage wireless infrastructure across
+          multiple service regions.
+        </p>
+      </div>
+
+      <div class="intro-section">
+        <h3>Real-Time Monitoring</h3>
+        <p>
+          When Live Data is enabled, the system communicates directly with network
+          equipment using SNMP to retrieve up-to-date operational metrics such as
+          uptime, signal strength, registration state, and online status.
+        </p>
+        <p>
+          Offline devices are immediately highlighted, enabling faster fault
+          isolation and reduced mean time to repair.
+        </p>
+      </div>
+
+      <div class="intro-section">
+        <h3>Key Capabilities</h3>
+        <ul>
+          <li>Filter and select devices by <strong>region</strong> and <strong>device class</strong></li>
+          <li>View real-time status via <strong>SNMP live polling</strong></li>
+          <li>Inspect radio, frequency, MAC, and uptime details</li>
+          <li>Access device interfaces and monitoring tools instantly</li>
+          <li>Review subscriber connections and signal quality</li>
+        </ul>
+      </div>
+
+      <div class="intro-section">
+        <h3>Subscriber & Device Management</h3>
+        <p>
+          Each access point provides visibility into connected subscriber modules,
+          including signal quality, hardware identifiers, and geographic data.
+          Integrated shortcuts allow quick access to customer records, authentication
+          systems, and device management interfaces.
+        </p>
+      </div>
+
+      <div class="intro-footer">
+        Built for speed, clarity, and operational awareness in live network environments.
+      </div>
+    </div>
+  </div>
+
   <div class="container">
     <header class="header">
       <div class="logo-container">
@@ -281,26 +535,8 @@
     </header>
     
     <main class="dashboard-grid">
-      <div class="column">
-        <div class="card">
-          <div class="card-title">Micros</div>
-          <div id="micros-list"></div>
-        </div>
-        <div class="card">
-          <div class="card-title">Switches</div>
-          <div id="switches-list"></div>
-        </div>
-        <div class="card">
-          <div class="card-title">Cameras</div>
-          <div id="cameras-list"></div>
-        </div>
-        <div class="card">
-          <div class="card-title">Miscellaneous</div>
-          <div id="misc-list"></div>
-        </div>
-      </div>
-      
-      <div class="column">
+      <!-- Center column appears first on narrow screens -->
+      <div class="column column-center">
         <div class="card">
           <div class="card-title">Network Filters</div>
           <div class="form-row">
@@ -368,7 +604,30 @@
         </div>
       </div>
       
-      <div class="column">
+      <!-- Left column appears second on narrow screens -->
+      <div class="column column-left">
+        <div class="card">
+          <div class="card-title">Micros</div>
+          <div id="micros-list"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Switches</div>
+          <div id="switches-list"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Cameras</div>
+          <div id="cameras-list"></div>
+        </div>
+<!--//
+        <div class="card">
+          <div class="card-title">Miscellaneous</div>
+          <div id="misc-list"></div>
+        </div>
+//-->
+      </div>
+      
+      <!-- Right column appears last on narrow screens -->
+      <div class="column column-right">
         <div class="card">
           <div class="card-title">Servers</div>
           <div id="servers-list"></div>
@@ -389,7 +648,12 @@
   <div class="toast" id="toast"></div>
   
   <script>
-    var devices = [
+    // Close modal functionality - simple version
+    function closeModal() {
+      document.getElementById('intro-overlay').style.display = 'none';
+    }
+    
+        var devices = [
   {
     "ip": "10.11.1.154",
     "region": "Quantum Bay",
@@ -979,328 +1243,184 @@
     "color": 229
   }
 ];
-    var micros = [
-  {
-    "name": "Nexus Prime Micro",
-    "ip": "10.11.1.28"
-  },
-  {
-    "name": "Zenith Point CMM4",
-    "ip": "10.11.1.34"
-  },
-  {
-    "name": "Crimson Grid Micro",
-    "ip": "10.11.2.12"
-  },
-  {
-    "name": "Quantum Bay Micro",
-    "ip": "10.11.1.10"
-  },
-  {
-    "name": "Nebula Station Micro",
-    "ip": "10.11.3.12"
+
+// Add these data arrays (you already have devices array, add these after it):
+var micros = [
+  { "name": "Nexus Prime Micro", "ip": "10.11.1.28" },
+  { "name": "Zenith Point CMM4", "ip": "10.11.1.34" },
+  { "name": "Crimson Grid Micro", "ip": "10.11.2.12" },
+  { "name": "Quantum Bay Micro", "ip": "10.11.1.10" },
+  { "name": "Nebula Station Micro", "ip": "10.11.3.12" }
+];
+
+var switches = [
+  { "name": "Vault Sector", "ip": "10.11.1.60" },
+  { "name": "Zenith Point Mountain", "ip": "10.11.1.9" },
+  { "name": "Echo Station Switch", "ip": "10.11.1.63" },
+  { "name": "Crimson Grid POP", "ip": "10.11.2.4" },
+  { "name": "Crimson Grid Tower", "ip": "10.11.2.2" },
+  { "name": "Quantum Bay POP", "ip": "10.11.1.4" },
+  { "name": "Cipher Node Office", "ip": "10.11.1.2" },
+  { "name": "Nebula Station POP", "ip": "10.11.3.4" },
+  { "name": "Nebula Station Tower", "ip": "10.11.3.2" }
+];
+
+var cameras = [
+  { "name": "Office Camera", "ip": "192.168.1.10" },
+  { "name": "Crimson Grid Camera", "ip": "10.11.2.203" },
+  { "name": "Nebula Station Camera", "ip": "10.11.3.203" }
+];
+
+var miscellaneous = [
+  { "name": "NetEQ Crimson Grid", "ip": "10.11.2.3" },
+  { "name": "NetEQ Nebula Station", "ip": "10.11.3.3" },
+  { "name": "R.E. Thermometer", "ip": "10.11.2.202" }
+];
+
+var servers = [
+  { "name": "cnMaestro Cloud", "url": "cloud.cambiumnet...", "ip": "" },
+  { "name": "On-Premise", "ip": "10.11.1.201" },
+  { "name": "DHCP Server", "url": "192.168.1.9dhcp...", "ip": "" },
+  { "name": "ESXi Server #1", "ip": "192.168.1.47" },
+  { "name": "ESXi Server #2", "ip": "192.168.1.48" },
+  { "name": "IP Management", "ip": "192.168.1.6" },
+  { "name": "RADIUS Server", "url": "10.11.1.200dalo...", "ip": "" },
+  { "name": "vCenter Server", "ip": "192.168.1.49" },
+  { "name": "PRTG", "ip": "192.168.1.5" },
+  { "name": "phpMyAdmin", "url": "192.168.1.9phpm...", "ip": "" }
+];
+
+var thirdPartyLinks = [
+  { "name": "Adobe Acrobat", "url": "http://chrome.google.com/" },
+  { "name": "ATCO Electric", "url": "http://electric.atco.com/" },
+  { "name": "GUI Enhancer", "url": "http://chrome.google.com/" },
+  { "name": "IE Tab Extension", "url": "http://chrome.google.com/" },
+  { "name": "Admin Webmail", "url": "http://admin.hostdomain.com/" },
+  { "name": "User Webmail", "url": "http://email.hostdomain.com/" },
+  { "name": "PuTTY", "url": "http://www.putty.org/" },
+  { "name": "WinSCP", "url": "http://winscp.net/" },
+  { "name": "3CXammer", "url": "http://3cxammer.update.com/" },
+  { "name": "LINKPlanner", "url": "http://www.cambiumnetworks.com/" },
+  { "name": "Wireshark", "url": "http://www.wireshark.org/" },
+  { "name": "Google Chrome", "url": "http://www.google.com/" },
+  { "name": "MIB Browser", "url": "http://www.ireasoning.com/" },
+  { "name": "CNIT", "url": "http://support.cambiumnetworks.com/" },
+  { "name": "iPerf", "url": "http://sourceforge.net/" },
+  { "name": "WinRAR", "url": "http://www.win-rar.com/" },
+  { "name": "AnyDesk", "url": "http://anydesk.com/en" },
+  { "name": "OfficeSuite", "url": "http://www.officesuite.org/" }
+];
+
+var regions = ["Quantum Bay", "Crimson Grid", "Nebula Station", "Axiom Point"];
+var deviceClasses = ["Access Point (PMP)", "Backhaul (PTP)"];
+
+// Helper Functions
+function showToast(message) {
+  var toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.classList.add('show');
+  setTimeout(function() { toast.classList.remove('show'); }, 2000);
+}
+
+function copyField(id, label) {
+  var value = document.getElementById(id).value;
+  if (value) {
+    navigator.clipboard.writeText(value);
+    showToast(label + ' copied!');
   }
-];
-    var switches = [
-  {
-    "name": "Vault Sector",
-    "ip": "10.11.1.60"
-  },
-  {
-    "name": "Zenith Point Mountain",
-    "ip": "10.11.1.9"
-  },
-  {
-    "name": "Echo Station Switch",
-    "ip": "10.11.1.63"
-  },
-  {
-    "name": "Crimson Grid POP",
-    "ip": "10.11.2.4"
-  },
-  {
-    "name": "Crimson Grid Tower",
-    "ip": "10.11.2.2"
-  },
-  {
-    "name": "Quantum Bay POP",
-    "ip": "10.11.1.4"
-  },
-  {
-    "name": "Cipher Node Office",
-    "ip": "10.11.1.2"
-  },
-  {
-    "name": "Nebula Station POP",
-    "ip": "10.11.3.4"
-  },
-  {
-    "name": "Nebula Station Tower",
-    "ip": "10.11.3.2"
-  }
-];
-    var cameras = [
-  {
-    "name": "Office Camera",
-    "ip": "192.168.1.10"
-  },
-  {
-    "name": "Crimson Grid Camera",
-    "ip": "10.11.2.203"
-  },
-  {
-    "name": "Nebula Station Camera",
-    "ip": "10.11.3.203"
-  }
-];
-    var miscellaneous = [
-  {
-    "name": "NetEQ Crimson Grid",
-    "ip": "10.11.2.3"
-  },
-  {
-    "name": "NetEQ Nebula Station",
-    "ip": "10.11.3.3"
-  },
-  {
-    "name": "R.E. Thermometer",
-    "ip": "10.11.2.202"
-  }
-];
-    var servers = [
-  {
-    "name": "cnMaestro Cloud",
-    "url": "cloud.cambiumnet...",
-    "ip": ""
-  },
-  {
-    "name": "On-Premise",
-    "ip": "10.11.1.201"
-  },
-  {
-    "name": "DHCP Server",
-    "url": "192.168.1.9dhcp...",
-    "ip": ""
-  },
-  {
-    "name": "ESXi Server #1",
-    "ip": "192.168.1.47"
-  },
-  {
-    "name": "ESXi Server #2",
-    "ip": "192.168.1.48"
-  },
-  {
-    "name": "IP Management",
-    "ip": "192.168.1.6"
-  },
-  {
-    "name": "RADIUS Server",
-    "url": "10.11.1.200dalo...",
-    "ip": ""
-  },
-  {
-    "name": "vCenter Server",
-    "ip": "192.168.1.49"
-  },
-  {
-    "name": "PRTG",
-    "ip": "192.168.1.5"
-  },
-  {
-    "name": "phpMyAdmin",
-    "url": "192.168.1.9phpm...",
-    "ip": ""
-  }
-];
-    var thirdPartyLinks = [
-  {
-    "name": "Adobe Acrobat",
-    "url": "chrome.google.co..."
-  },
-  {
-    "name": "ATCO Electric",
-    "url": "electric.atco.co..."
-  },
-  {
-    "name": "GUI Enhancer",
-    "url": "chrome.google.co..."
-  },
-  {
-    "name": "IE Tab Extension",
-    "url": "chrome.google.co..."
-  },
-  {
-    "name": "Admin Webmail",
-    "url": "admin.hostdomai..."
-  },
-  {
-    "name": "User Webmail",
-    "url": "email.hostdomai..."
-  },
-  {
-    "name": "PuTTY",
-    "url": "www.putty.org"
-  },
-  {
-    "name": "WinSCP",
-    "url": "winscp.net/eng..."
-  },
-  {
-    "name": "3CXammer",
-    "url": "3cxammer.update..."
-  },
-  {
-    "name": "LINKPlanner",
-    "url": "www.cambiumnetwo..."
-  },
-  {
-    "name": "Wireshark",
-    "url": "www.wireshark.or..."
-  },
-  {
-    "name": "Google Chrome",
-    "url": "www.google.com/..."
-  },
-  {
-    "name": "MIB Browser",
-    "url": "www.ireasoning.c..."
-  },
-  {
-    "name": "CNIT",
-    "url": "support.cambium..."
-  },
-  {
-    "name": "iPerf",
-    "url": "sourceforge.net/..."
-  },
-  {
-    "name": "WinRAR",
-    "url": "www.win-rar.com/..."
-  },
-  {
-    "name": "AnyDesk",
-    "url": "anydesk.com/en"
-  },
-  {
-    "name": "OfficeSuite",
-    "url": "www.officesuite..."
-  }
-];
-    var regions = [
-  "Quantum Bay",
-  "Crimson Grid",
-  "Nebula Station",
-  "Axiom Point"
-];
-    var deviceClasses = [
-  "Access Point (PMP)",
-  "Backhaul (PTP)"
-];
-    
-    function showToast(message) {
-      var toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.classList.add('show');
-      setTimeout(function() { toast.classList.remove('show'); }, 2000);
-    }
-    
-    function copyField(id, label) {
-      var value = document.getElementById(id).value;
-      if (value) {
-        navigator.clipboard.writeText(value);
-        showToast(label + ' copied!');
-      }
-    }
-    
-    function openIP() {
-      var ip = document.getElementById('ip-address').value;
-      if (ip) window.open('http://' + ip, '_blank');
-    }
-    
-    function createDeviceRow(name, ip, onClick) {
-      var div = document.createElement('div');
-      div.className = 'device-row';
-      div.innerHTML = '<span class="name">' + name + '</span><span class="ip">' + (ip || '') + '</span>';
-      if (onClick) div.onclick = onClick;
-      return div;
-    }
-    
-    function createLinkRow(name, url) {
-      var div = document.createElement('div');
-      div.className = 'device-row';
-      div.innerHTML = '<span class="name">' + name + '</span><a href="' + url + '" target="_blank" class="ip">Open</a>';
-      return div;
-    }
-    
-    function selectDevice(device) {
-      document.getElementById('ip-address').value = device.ip || '';
-      document.getElementById('hostname').value = device.device || '';
-      document.getElementById('software').value = device.software || device.hardware || '';
-      document.getElementById('mac-address').value = device.mac || '';
-      document.getElementById('frequency').value = device.frequency || '';
-      document.getElementById('color-code').value = device.color || '';
-    }
-    
-    function renderLists() {
-      var microsList = document.getElementById('micros-list');
-      micros.forEach(function(item) { microsList.appendChild(createDeviceRow(item.name, item.ip)); });
-      
-      var switchesList = document.getElementById('switches-list');
-      switches.forEach(function(item) { switchesList.appendChild(createDeviceRow(item.name, item.ip)); });
-      
-      var camerasList = document.getElementById('cameras-list');
-      cameras.forEach(function(item) { camerasList.appendChild(createDeviceRow(item.name, item.ip)); });
-      
-      var miscList = document.getElementById('misc-list');
-      miscellaneous.forEach(function(item) { miscList.appendChild(createDeviceRow(item.name, item.ip)); });
-      
-      var serversList = document.getElementById('servers-list');
-      servers.forEach(function(item) { serversList.appendChild(createDeviceRow(item.name, item.ip || item.url)); });
-      
-      var linksList = document.getElementById('links-list');
-      thirdPartyLinks.forEach(function(item) { linksList.appendChild(createLinkRow(item.name, item.url)); });
-      
-      var regionFilter = document.getElementById('region-filter');
-      regions.forEach(function(r) {
-        var opt = document.createElement('option');
-        opt.value = r;
-        opt.textContent = r;
-        regionFilter.appendChild(opt);
-      });
-      
-      var classFilter = document.getElementById('class-filter');
-      deviceClasses.forEach(function(c) {
-        var opt = document.createElement('option');
-        opt.value = c;
-        opt.textContent = c;
-        classFilter.appendChild(opt);
-      });
-      
-      renderAccessPoints();
-    }
-    
-    function renderAccessPoints() {
-      var region = document.getElementById('region-filter').value;
-      var deviceClass = document.getElementById('class-filter').value;
-      var list = document.getElementById('access-points-list');
-      list.innerHTML = '';
-      
-      var filtered = devices.filter(function(d) {
-        if (region && d.region !== region) return false;
-        if (deviceClass && d.deviceClass !== deviceClass) return false;
-        return d.deviceClass && d.deviceClass.indexOf('Access Point') !== -1;
-      });
-      
-      filtered.forEach(function(device) {
-        list.appendChild(createDeviceRow(device.device, device.ip, function() { selectDevice(device); }));
-      });
-    }
-    
-    document.getElementById('region-filter').addEventListener('change', renderAccessPoints);
-    document.getElementById('class-filter').addEventListener('change', renderAccessPoints);
-    
-    renderLists();
-  </script>
+}
+
+function openIP() {
+  var ip = document.getElementById('ip-address').value;
+  if (ip) window.open('http://' + ip, '_blank');
+}
+
+function createDeviceRow(name, ip, onClick) {
+  var div = document.createElement('div');
+  div.className = 'device-row';
+  div.innerHTML = '<span class="name">' + name + '</span><span class="ip">' + (ip || '') + '</span>';
+  if (onClick) div.onclick = onClick;
+  return div;
+}
+
+function createLinkRow(name, url) {
+  var div = document.createElement('div');
+  div.className = 'device-row';
+  div.innerHTML = '<span class="name">' + name + '</span><a href="' + url + '" target="_blank" class="ip">Open</a>';
+  return div;
+}
+
+function selectDevice(device) {
+  document.getElementById('ip-address').value = device.ip || '';
+  document.getElementById('hostname').value = device.device || '';
+  document.getElementById('software').value = device.software || device.hardware || '';
+  document.getElementById('mac-address').value = device.mac || '';
+  document.getElementById('frequency').value = device.frequency || '';
+  document.getElementById('color-code').value = device.color || '';
+}
+
+function renderLists() {
+  var microsList = document.getElementById('micros-list');
+  micros.forEach(function(item) { microsList.appendChild(createDeviceRow(item.name, item.ip)); });
+  
+  var switchesList = document.getElementById('switches-list');
+  switches.forEach(function(item) { switchesList.appendChild(createDeviceRow(item.name, item.ip)); });
+  
+  var camerasList = document.getElementById('cameras-list');
+  cameras.forEach(function(item) { camerasList.appendChild(createDeviceRow(item.name, item.ip)); });
+  
+  //var miscList = document.getElementById('misc-list');
+  //miscellaneous.forEach(function(item) { miscList.appendChild(createDeviceRow(item.name, item.ip)); });
+  
+  var serversList = document.getElementById('servers-list');
+  servers.forEach(function(item) { serversList.appendChild(createDeviceRow(item.name, item.ip || item.url)); });
+  
+  var linksList = document.getElementById('links-list');
+  thirdPartyLinks.forEach(function(item) { linksList.appendChild(createLinkRow(item.name, item.url)); });
+  
+  var regionFilter = document.getElementById('region-filter');
+  regions.forEach(function(r) {
+    var opt = document.createElement('option');
+    opt.value = r;
+    opt.textContent = r;
+    regionFilter.appendChild(opt);
+  });
+  
+  var classFilter = document.getElementById('class-filter');
+  deviceClasses.forEach(function(c) {
+    var opt = document.createElement('option');
+    opt.value = c;
+    opt.textContent = c;
+    classFilter.appendChild(opt);
+  });
+  
+  renderAccessPoints();
+}
+
+function renderAccessPoints() {
+  var region = document.getElementById('region-filter').value;
+  var deviceClass = document.getElementById('class-filter').value;
+  var list = document.getElementById('access-points-list');
+  list.innerHTML = '';
+  
+  var filtered = devices.filter(function(d) {
+    if (region && d.region !== region) return false;
+    if (deviceClass && d.deviceClass !== deviceClass) return false;
+    return d.deviceClass && d.deviceClass.indexOf('Access Point') !== -1;
+  });
+  
+  filtered.forEach(function(device) {
+    list.appendChild(createDeviceRow(device.device, device.ip, function() { selectDevice(device); }));
+  });
+}
+
+// Event Listeners
+document.getElementById('region-filter').addEventListener('change', renderAccessPoints);
+document.getElementById('class-filter').addEventListener('change', renderAccessPoints);
+
+// Initialize on page load
+renderLists();
+
+</script>
 </body>
 </html>
