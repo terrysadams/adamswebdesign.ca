@@ -49,7 +49,7 @@
             
             if (shouldShowMobile() && !hasDesktopPreference()) {
                 // Redirect to mobile version
-                window.location.href = 'mobile.html';
+                //window.location.href = 'mobile.html';
             }
         }
         
