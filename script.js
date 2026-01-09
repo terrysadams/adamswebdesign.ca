@@ -83,6 +83,6 @@
         
         window.viewMobileVersion = function() {
             sessionStorage.removeItem('viewDesktop');
-            window.location.href = 'mobile.html';
+            window.location.href = 'mobile_website.html';
         };
     })();
