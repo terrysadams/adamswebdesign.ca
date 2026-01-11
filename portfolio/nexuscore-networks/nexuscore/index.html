@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0a0b0f">
+  <meta name="description" content="NexusCore Networks - Unified Wireless Infrastructure Management">
+  
+  <!-- PWA Meta Tags -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="NexusCore">
+  
+  <title>NexusCore Networks</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    // Register Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(function(registration) {
+            console.log('ServiceWorker registered');
+          })
+          .catch(function(error) {
+            console.log('ServiceWorker registration failed:', error);
+          });
+      });
+    }
+
+    // Screen Width and Orientation Detection Script
+    (function() {
+        const MAX_MOBILE_WIDTH = 768;
+        
+        function hasDesktopPreference() {
+            return sessionStorage.getItem('viewDesktop') === 'true';
+        }
+        
+        function getScreenInfo() {
+            return {
+                width: window.innerWidth || document.documentElement.clientWidth,
+                height: window.innerHeight || document.documentElement.clientHeight,
+                orientation: window.screen.orientation?.type || 
+                           (window.innerWidth > window.innerHeight ? 'landscape' : 'portrait')
+            };
+        }
+        
+        function shouldShowMobile() {
+            const screenInfo = getScreenInfo();
+            
+            if (screenInfo.width < MAX_MOBILE_WIDTH) {
+                if (screenInfo.orientation.includes('portrait')) {
+                    return true;
+                }
+                if (screenInfo.width < 600) {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+        
+        
+        checkAndRedirect();
+        
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(function() {
+                if (!hasDesktopPreference()) {
+                    checkAndRedirect();
+                }
+            }, 250);
+        });
+        
+        window.addEventListener('orientationchange', function() {
+            setTimeout(function() {
+                if (!hasDesktopPreference()) {
+                    checkAndRedirect();
+                }
+            }, 100);
+        });
+        
+        window.viewDesktopVersion = function() {
+            sessionStorage.setItem('viewDesktop', 'true');
+            window.location.href = 'index.html';
+        };
+        
+        window.viewMobileVersion = function() {
+            sessionStorage.removeItem('viewDesktop');
+            window.location.href = 'mobile.html';
+        };
+    })();
+  </script>
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --bg: #0a0b0f;
+      --bg-card: #0d0f14;
+      --border: #1a2030;
+      --text: #f0ffe6;
+      --text-muted: #6b7280;
+      --primary: #adff2f;
+      --primary-glow: rgba(173, 255, 47, 0.6);
+    }
+    
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    
+    .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+    
+    .header {
+      text-align: center;
+      padding: 30px 20px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+    
+    .logo-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+    
+    .wifi-icon {
+      width: 64px;
+      height: 64px;
+      color: var(--primary);
+      filter: drop-shadow(0 0 10px var(--primary-glow));
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; filter: drop-shadow(0 0 8px var(--primary-glow)); }
+      50% { opacity: 0.8; filter: drop-shadow(0 0 20px var(--primary-glow)); }
+    }
+    
+    .logo-text h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-shadow: 0 0 10px var(--primary-glow);
+    }
+    
+    .logo-text h1 .highlight { color: var(--primary); }
+    
+    .logo-text p {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+    
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    
+    @media (min-width: 1024px) {
+      .dashboard-grid {
+        grid-template-columns: 3fr 5fr 4fr;
+        grid-template-areas: "left center right";
+      }
+      
+      .column-left { grid-area: left; }
+      .column-center { grid-area: center; }
+      .column-right { grid-area: right; }
+    }
+    
+    @media (max-width: 1023px) {
+      .column-center { order: 1; }
+      .column-left { order: 2; }
+      .column-right { order: 3; }
+    }
+    
+    .column { display: flex; flex-direction: column; gap: 16px; }
+    
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 0 20px rgba(173, 255, 47, 0.15);
+    }
+    
+    .card-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .device-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      background: rgba(26, 32, 48, 0.4);
+      border-radius: 8px;
+      margin-bottom: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.875rem;
+    }
+    
+    .device-row:hover {
+      background: rgba(173, 255, 47, 0.1);
+      transform: translateX(4px);
+    }
+    
+    .device-row .name { color: var(--text); font-weight: 500; }
+    .device-row .ip { color: var(--primary); font-family: 'Rajdhani', monospace; font-size: 0.8rem; }
+    
+    .device-row a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+    
+    .device-row a:hover { text-decoration: underline; }
+    
+    .form-group { margin-bottom: 12px; }
+    
+    .form-label {
+      display: block;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 6px;
+    }
+    
+    .form-input, .form-select {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(26, 32, 48, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+    
+    .form-input:focus, .form-select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(173, 255, 47, 0.2);
+    }
+    
+    .form-select option { background: var(--bg-card); }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    
+    .input-with-actions {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .input-with-actions .form-input { flex: 1; }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+    }
+    
+    .btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    
+    .btn-icon {
+      padding: 10px;
+      min-width: 42px;
+    }
+    
+    .btn svg { width: 16px; height: 16px; }
+    
+    .scrollable-list {
+      max-height: 200px;
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+    
+    .scrollable-list::-webkit-scrollbar { width: 4px; }
+    .scrollable-list::-webkit-scrollbar-track { background: var(--border); border-radius: 2px; }
+    .scrollable-list::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 2px; }
+    
+    .link-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+    }
+    
+    .footer {
+      text-align: center;
+      padding: 24px 20px;
+      border-top: 1px solid var(--border);
+      margin-top: 32px;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+    
+    .footer .highlight { color: var(--primary); }
+    
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--primary);
+      border-radius: 8px;
+      padding: 12px 20px;
+      color: var(--primary);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.8rem;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+    
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    #intro-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 11, 15, 0.85);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #intro-modal {
+      background: var(--bg-card);
+      border: 1px solid var(--primary);
+      border-radius: 14px;
+      padding: 28px 32px;
+      max-width: 720px;
+      width: 90%;
+      box-shadow: 0 0 40px rgba(173, 255, 47, 0.25);
+      position: relative;
+      animation: introFade 0.4s ease;
+      pointer-events: auto;
+    }
+
+    @keyframes introFade {
+      from { opacity: 0; transform: scale(0.95); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    #intro-modal h2 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--primary);
+      letter-spacing: 0.12em;
+      margin-bottom: 4px;
+    }
+
+    #intro-modal .tagline {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .intro-section {
+      margin-bottom: 18px;
+    }
+
+    .intro-section h3 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    .intro-section p,
+    .intro-section li {
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    .intro-section ul {
+      padding-left: 18px;
+    }
+
+    .intro-section li {
+      margin-bottom: 6px;
+    }
+
+    .intro-footer {
+      margin-top: 18px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    #intro-close {
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      background: none;
+      border: none;
+      color: var(--primary);
+      font-size: 1.6rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    #intro-close:hover {
+      transform: scale(1.2);
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="intro-overlay" onclick="if(event.target.id==='intro-overlay') document.getElementById('intro-overlay').style.display='none'">
+    <div id="intro-modal" role="dialog" aria-modal="true">
+      <button id="intro-close" type="button" aria-label="Close" onclick="document.getElementById('intro-overlay').style.display='none'; event.stopPropagation();">&times;</button>
+
+      <h2>NexusCore Network Dashboard</h2>
+      <p class="tagline">Unified Wireless Infrastructure Management</p>
+
+      <div class="intro-section">
+        <h3>Main Purpose</h3>
+        <p>
+          This dashboard is a centralized web-based tool designed for NexusCore Networks,
+          enabling administrators to monitor and manage wireless infrastructure across
+          multiple service regions.
+        </p>
+      </div>
+
+      <div class="intro-section">
+        <h3>Real-Time Monitoring</h3>
+        <p>
+          When Live Data is enabled, the system communicates directly with network
+          equipment using SNMP to retrieve up-to-date operational metrics such as
+          uptime, signal strength, registration state, and online status.
+        </p>
+        <p>
+          Offline devices are immediately highlighted, enabling faster fault
+          isolation and reduced mean time to repair.
+        </p>
+      </div>
+
+      <div class="intro-section">
+        <h3>Key Capabilities</h3>
+        <ul>
+          <li>Filter and select devices by <strong>region</strong> and <strong>device class</strong></li>
+          <li>View real-time status via <strong>SNMP live polling</strong></li>
+          <li>Inspect radio, frequency, MAC, and uptime details</li>
+          <li>Access device interfaces and monitoring tools instantly</li>
+          <li>Review subscriber connections and signal quality</li>
+        </ul>
+      </div>
+
+      <div class="intro-section">
+        <h3>Subscriber & Device Management</h3>
+        <p>
+          Each access point provides visibility into connected subscriber modules,
+          including signal quality, hardware identifiers, and geographic data.
+          Integrated shortcuts allow quick access to customer records, authentication
+          systems, and device management interfaces.
+        </p>
+      </div>
+
+      <div class="intro-footer">
+        Built for speed, clarity, and operational awareness in live network environments.
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <header class="header">
+      <div class="logo-container">
+        <svg class="wifi-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 28C8 28 20 12 32 12C44 12 56 28 56 28" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+          <path d="M16 36C16 36 22 24 32 24C42 24 48 36 48 36" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+          <path d="M24 44C24 44 27 36 32 36C37 36 40 44 40 44" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="32" cy="52" r="4" fill="currentColor"/>
+        </svg>
+        <div class="logo-text">
+          <h1><span class="highlight">NEXUSCORE</span> NETWORKS</h1>
+          <p>Unified Communication Infrastructure</p>
+        </div>
+      </div>
+    </header>
+    
+    <main class="dashboard-grid">
+      <div class="column column-center">
+        <div class="card">
+          <div class="card-title">Network Filters</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Region</label>
+              <select class="form-select" id="region-filter">
+                <option value="">All Regions</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Class</label>
+              <select class="form-select" id="class-filter">
+                <option value="">All Classes</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-title">Access Points</div>
+          <div class="scrollable-list" id="access-points-list"></div>
+        </div>
+        
+        <div class="card">
+          <div class="card-title">Device Details</div>
+          <div class="form-group">
+            <label class="form-label">IP Address</label>
+            <div class="input-with-actions">
+              <input type="text" class="form-input" id="ip-address" placeholder="10.11.x.x">
+              <button class="btn btn-icon" onclick="openIP()" title="Open in browser">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </button>
+              <button class="btn btn-icon" onclick="copyField('ip-address', 'IP Address')" title="Copy">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Hostname</label>
+            <input type="text" class="form-input" id="hostname" placeholder="Device name">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Software / Hardware</label>
+            <input type="text" class="form-input" id="software" placeholder="Version info">
+          </div>
+          <div class="form-group">
+            <label class="form-label">MAC Address</label>
+            <div class="input-with-actions">
+              <input type="text" class="form-input" id="mac-address" placeholder="00:00:00:00:00:00">
+              <button class="btn btn-icon" onclick="copyField('mac-address', 'MAC Address')" title="Copy">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Frequency</label>
+              <input type="text" class="form-input" id="frequency" placeholder="MHz">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Color Code</label>
+              <input type="text" class="form-input" id="color-code" placeholder="Code">
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="column column-left">
+        <div class="card">
+          <div class="card-title">Micros</div>
+          <div id="micros-list"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Switches</div>
+          <div id="switches-list"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Cameras</div>
+          <div id="cameras-list"></div>
+        </div>
+      </div>
+      
+      <div class="column column-right">
+        <div class="card">
+          <div class="card-title">Servers</div>
+          <div id="servers-list"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Third-Party Resources</div>
+          <div class="link-grid" id="links-list"></div>
+        </div>
+      </div>
+    </main>
+    
+    <footer class="footer">
+      <p>NexusCore Networks | <span class="highlight">nexuscorenetworks.com</span></p>
+      <p style="font-size: 0.75rem; margin-top: 4px;">Generated: December 27, 2025</p>
+    </footer>
+  </div>
+  
+  <div class="toast" id="toast"></div>
+  
+  <script src="app-data.js"></script>
+  <script src="app-functions.js"></script>
+</body>
+</html>
